@@ -11,7 +11,7 @@ namespace WebApplication1.Areas.Employee.Controllers
         // GET: Employee/Default1
         public ActionResult Index()
         {
-            ViewBag.ooo = "ddd";
+            ViewBag.ooo = "employee";
             return View();
         }
     }
