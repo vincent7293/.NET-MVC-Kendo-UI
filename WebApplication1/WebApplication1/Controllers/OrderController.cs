@@ -11,16 +11,24 @@ namespace WebApplication1.Controllers
         // GET: Order
         public ActionResult Index()
         {
-            Models.OrderService orderService = new Models.OrderService();
-            var order = orderService.GetOrderById("111");
-            ViewBag.CustId = order.CustId;
-            ViewBag.CustName = order.CustName;
             return View();
         }
-        public ActionResult Detail(string id)
+        public ActionResult InsertOrder()
         {
-            ViewBag.id = id;
             return View();
+        }
+        [HttpPost()]
+        public ActionResult InsertOrder(Models.Order order)
+        {
+            Models.OrderService orderservice = new Models.OrderService();
+            orderservice.InsertOrder(order);
+            return View("Index");
+        }
+        [HttpGet()]
+        public JsonResult JsonTest()
+        {
+            var result = new Models.Order() { CustId = "11", CustName = "dd" };
+            return this.Json(result, JsonRequestBehavior.AllowGet);
         }
     }
 }

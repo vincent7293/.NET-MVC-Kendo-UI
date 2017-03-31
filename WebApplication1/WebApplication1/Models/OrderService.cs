@@ -7,7 +7,7 @@ namespace WebApplication1.Models
 {
     public class OrderService
     {
-        public void InsertOrder()
+        public void InsertOrder(Models.Order order)
         {
 
         }
@@ -22,8 +22,8 @@ namespace WebApplication1.Models
         public Models.Order GetOrderById(string id)
         {
             Models.Order result = new Order();
-            result.CustId = "111";
-            result.CustName = "Vincent";
+            result.CustId = id;
+            result.CustName = id;
             return result;
         }
     }
