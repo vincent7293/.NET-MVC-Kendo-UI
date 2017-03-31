@@ -24,11 +24,6 @@ namespace WebApplication1.Controllers
             orderservice.InsertOrder(order);
             return View("Index");
         }
-        [HttpGet()]
-        public JsonResult JsonTest()
-        {
-            var result = new Models.Order() { CustId = "11", CustName = "dd" };
-            return this.Json(result, JsonRequestBehavior.AllowGet);
-        }
+        
     }
 }
