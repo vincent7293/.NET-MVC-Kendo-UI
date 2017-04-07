@@ -1,4 +1,4 @@
-﻿
+﻿@model List<WebApplication1.Models.Order>
 @{
     Layout = null;
 }
@@ -12,8 +12,24 @@
 </head>
 <body>
     <div> 
-        @ViewBag.CustId
-        @ViewBag.CustName
+        
+            <table>
+            <tr>
+                <td>訂單編號</td>
+                <td>客戶名稱</td>
+                <td>訂購日期</td>
+                <td>發貨日期</td>
+                <td></td>
+                <td></td>
+            </tr>
+          
+           @foreach (var aa in Model)
+           {
+            <tr>
+                <td>@aa.OrderId</td>
+            </tr>
+           }
+        </table>
     </div>
 </body>
 </html>

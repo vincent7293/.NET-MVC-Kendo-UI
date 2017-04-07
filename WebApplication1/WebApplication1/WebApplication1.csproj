@@ -60,6 +60,8 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -179,10 +181,67 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\Categories.cs">
+      <DependentUpon>TSQL2012.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Customers.cs">
+      <DependentUpon>TSQL2012.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Employees.cs">
+      <DependentUpon>TSQL2012.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\EmpOrders.cs">
+      <DependentUpon>TSQL2012.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\GetNums_Result.cs">
+      <DependentUpon>TSQL2012.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
+    <Compile Include="Models\Nums.cs">
+      <DependentUpon>TSQL2012.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\Order.cs" />
+    <Compile Include="Models\OrderDetails.cs">
+      <DependentUpon>TSQL2012.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Orders.cs">
+      <DependentUpon>TSQL2012.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\OrderService.cs" />
+    <Compile Include="Models\OrderValues.cs">
+      <DependentUpon>TSQL2012.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Products.cs">
+      <DependentUpon>TSQL2012.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Scores.cs">
+      <DependentUpon>TSQL2012.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Shippers.cs">
+      <DependentUpon>TSQL2012.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Suppliers.cs">
+      <DependentUpon>TSQL2012.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Tests.cs">
+      <DependentUpon>TSQL2012.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\TSQL2012.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>TSQL2012.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\TSQL2012.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>TSQL2012.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\TSQL2012.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>TSQL2012.edmx</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
@@ -205,7 +264,24 @@
     <Content Include="Content\bootstrap-theme.css.map" />
     <Content Include="Areas\Employee\Views\web.config" />
     <Content Include="Areas\Employee\Views\Default1\Index.cshtml" />
+    <EntityDeploy Include="Models\TSQL2012.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>TSQL2012.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <Content Include="Models\TSQL2012.edmx.diagram">
+      <DependentUpon>TSQL2012.edmx</DependentUpon>
+    </Content>
     <None Include="Scripts\jquery-3.1.1.intellisense.js" />
+    <Content Include="Models\TSQL2012.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>TSQL2012.edmx</DependentUpon>
+      <LastGenOutput>TSQL2012.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="Models\TSQL2012.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>TSQL2012.edmx</DependentUpon>
+      <LastGenOutput>TSQL2012.cs</LastGenOutput>
+    </Content>
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\jquery-3.1.1.js" />
@@ -261,7 +337,6 @@
     <Content Include="Views\Order\Detail.cshtml" />
     <Content Include="Views\Order\InsertOrder.cshtml" />
     <Content Include="Views\_LayoutPage1.cshtml" />
-    <Content Include="Views\LayoutTest\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -273,6 +348,9 @@
     <None Include="Project_Readme.html" />
     <Content Include="Scripts\jquery-3.1.1.slim.min.map" />
     <Content Include="Scripts\jquery-3.1.1.min.map" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
