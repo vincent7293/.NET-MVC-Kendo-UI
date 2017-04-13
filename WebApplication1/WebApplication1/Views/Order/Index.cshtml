@@ -1,8 +1,7 @@
 ﻿@model List<WebApplication1.Models.Order>
 @{
-    Layout = null;
+    ViewBag.Title = "訂單首頁";
 }
-
 <!DOCTYPE html>
 
 <html>
@@ -12,8 +11,18 @@
 </head>
 <body>
     <div> 
-        
-            <table>
+@using (Html.BeginForm("SearchOrder", "Order"))
+{ 
+            <table class="table">
+                <tr>
+                    <td>訂單編號</td><td><input type="text" name="OrderId" /></td>
+                    @*<td>客戶名稱</td><td><input type="text" name="CustName" /></td>*@
+                    <td><input type="submit" value="查詢" /></td>
+                </tr>
+            </table>
+
+ }
+            <table class="table">
             <tr>
                 <td>訂單編號</td>
                 <td>客戶名稱</td>
@@ -27,6 +36,10 @@
            {
             <tr>
                 <td>@aa.OrderId</td>
+                <td>@aa.CustName</td>
+                <td>@aa.Orderdate</td>
+                <td>@aa.ShippedDate</td>
+
             </tr>
            }
         </table>

@@ -18,7 +18,7 @@ namespace WebApplication1.Models
         /// 客戶代號
         /// </summary>
         [Display(Name = "客戶編號")]
-        public string CustId { get; set; }
+        public int CustId { get; set; }
         /// <summary>
         /// 客戶名稱
         /// </summary>
@@ -44,7 +44,7 @@ namespace WebApplication1.Models
         /// 需要日期
         /// </summary>
         [Display(Name = "需要日期")]
-        public DateTime? RequireDdate { get; set; }
+        public DateTime? RequiredDate { get; set; }
 
         /// <summary>
         /// 出貨日期
@@ -61,41 +61,48 @@ namespace WebApplication1.Models
         /// 出貨公司名稱
         /// </summary>
         [Display(Name = "出貨公司")]
-        public int ShipperName { get; set; }
+        public string ShipperName { get; set; }
 
         /// <summary>
         /// 運費
         /// </summary>
+        [Display(Name = "運費")]
         public double Freight { get; set; }
 
         /// <summary>
         /// 出貨說明
         /// </summary>
+        [Display(Name = "出貨說明")]
         public string ShipName { get; set; }
 
         /// <summary>
         /// 出貨地址
         /// </summary>
+        [Display(Name = "出貨地址")]
         public string ShipAddress { get; set; }
 
         /// <summary>
         /// 出貨程式
         /// </summary>
+        [Display(Name = "出貨城市")]
         public string ShipCity { get; set; }
 
         /// <summary>
         /// 出貨地區
         /// </summary>
+        [Display(Name = "出貨地區")]
         public string ShipRegion { get; set; }
 
         /// <summary>
         /// 郵遞區號
         /// </summary>
+        [Display(Name = "郵遞區號")]
         public string ShipPostalCode { get; set; }
 
         /// <summary>
         /// 出貨國家
         /// </summary>
+        [Display(Name = "出貨國家")]
         public string ShipCountry { get; set; }
     }
 }
