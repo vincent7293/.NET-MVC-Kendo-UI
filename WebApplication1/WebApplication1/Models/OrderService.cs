@@ -20,18 +20,23 @@ namespace WebApplication1.Models
            ,[Freight],[ShipName],[ShipAddress],[ShipCity],[ShipRegion],[ShipPostalCode],[ShipCountry])
      VALUES
            (
-            @custid,@empid,@orderdate,@requireddate,@shippeddate,@shipperid
-            @freight,@shipname,@shipaddress,@shipcity,@shipregion,@shippostalcode,@shipcountry
+            @custid,@empid,@orderdate,@requireddate,@shippeddate,@shipperid,
+            @freight,'@shipname','@shipaddress','@shipcity','@shipregion','@shippostalcode','@shipcountry'
             )
             select scope_identity()
             ";
             int orderId=11078;
+            string format1 = order.Orderdate.ToString("yyyy-MM-dd");
+            string format2 = order.RequiredDate.ToString("yyyy-MM-dd");
+            string format3 = order.ShippedDate.ToString("yyyy-MM-dd");
+
             using (SqlConnection conn = new SqlConnection(this.GetDBConnectionString()))
             {
                 conn.Open();
                 SqlCommand cmd = new SqlCommand(sql, conn);
                 cmd.Parameters.Add(new SqlParameter("@custid", order.CustId));
                 cmd.Parameters.Add(new SqlParameter("@empid", order.EmpId));
+
                 cmd.Parameters.Add(new SqlParameter("@orderdate", order.Orderdate));
                 cmd.Parameters.Add(new SqlParameter("@requireddate", order.RequiredDate));
                 cmd.Parameters.Add(new SqlParameter("@shippeddate", order.ShippedDate));
@@ -45,15 +50,30 @@ namespace WebApplication1.Models
                 cmd.Parameters.Add(new SqlParameter("@shipcountry", order.ShipCountry));
 
                 //orderId = (int)cmd.ExecuteScalar();
-
+                cmd.ExecuteNonQuery();
                 conn.Close();
 
             }
             return orderId;
         }
-        public void DeleteOrder()
+        public int DeleteOrder(string orderId)
         {
+            int effectData = 0;
+            string sql = @"DELETE FROM [Sales].[OrderDetails]
+      WHERE [OrderID]=@OrderId
 
+DELETE FROM [Sales].[Orders]
+      WHERE [OrderID]=@OrderId";
+            using (SqlConnection conn = new SqlConnection(this.GetDBConnectionString()))
+            {
+                conn.Open();
+                SqlCommand cmd = new SqlCommand(sql, conn);
+                cmd.Parameters.Add(new SqlParameter("@OrderId", orderId));
+                effectData = cmd.ExecuteNonQuery();
+         
+                conn.Close();
+            }
+            return effectData;
         }
         public void UpdateOrder()
         {
@@ -64,7 +84,8 @@ namespace WebApplication1.Models
         {
             DataTable dt = new DataTable();
             string sql = @"SELECT TOP (100) O.OrderID, O.CustomerID as CustId, C.CompanyName as CustName, E.EmployeeID as EmpId,
-E.FirstName+E.LastName as EmpName, O.OrderDate, O.RequiredDate, O.ShippedDate, S.ShipperID
+E.FirstName+E.LastName as EmpName, coalesce(convert(varchar(10), O.OrderDate, 121), '')
+,coalesce(convert(varchar(10), O.RequiredDate, 121), '') ,coalesce(convert(varchar(10), O.ShippedDate, 121), '') , S.ShipperID
 , S.CompanyName as ShipperName, O.Freight, O.ShipName ,O.ShipAddress, O.ShipCity
 ,O.ShipPostalCode , O.ShipCountry
   FROM [Sales].[Orders] as O 
@@ -89,8 +110,10 @@ WHERE O.OrderID=@OrderId";
         public List<Models.Order> GetAllOrder()
         {
             DataTable dt = new DataTable();
-            string sql = @"SELECT TOP (100) O.OrderID, O.CustomerID as CustId, C.CompanyName as CustName, E.EmployeeID as EmpId,
-E.FirstName+E.LastName as EmpName, O.OrderDate, O.RequiredDate, O.ShippedDate, S.ShipperID
+            string sql = @"SELECT TOP (100) O.OrderID, O.CustomerID as CustId, C.CompanyName as CustName, E.EmployeeID as EmpId
+,E.FirstName+E.LastName as EmpName, coalesce(convert(varchar(10), O.OrderDate, 121), '')
+,coalesce(convert(varchar(10), O.RequiredDate, 121), '') ,coalesce(convert(varchar(10), O.ShippedDate, 121), '') 
+, S.ShipperID
 , S.CompanyName as ShipperName, O.Freight, O.ShipName ,O.ShipAddress, O.ShipCity
 ,O.ShipPostalCode , O.ShipCountry
   FROM [Sales].[Orders] as O 
@@ -123,10 +146,10 @@ E.FirstName+E.LastName as EmpName, O.OrderDate, O.RequiredDate, O.ShippedDate, S
                     EmpId = (int)row["EmpId"],
                     EmpName = row["EmpName"].ToString(),
                  // Freight = (double)row["Freight"],
-                    Orderdate = row["Orderdate"] == DBNull.Value ? (DateTime?)null : (DateTime)row["Orderdate"],
+                    Orderdate = (DateTime)row["Orderdate"],
                     OrderId = (int)row["OrderId"],
-                    ShippedDate = row["ShippedDate"] == DBNull.Value ? (DateTime?)null : (DateTime)row["ShippedDate"],
-                    RequiredDate = row["RequiredDate"] == DBNull.Value ? (DateTime?)null : (DateTime)row["RequiredDate"]
+                    ShippedDate = (DateTime)row["ShippedDate"],
+                    RequiredDate = (DateTime)row["RequiredDate"]
 
                 });
             }

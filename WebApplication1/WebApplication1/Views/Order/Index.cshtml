@@ -17,7 +17,7 @@
                 <tr>
                     <td>訂單編號</td><td><input type="text" name="OrderId" /></td>
                     @*<td>客戶名稱</td><td><input type="text" name="CustName" /></td>*@
-                    <td><input type="submit" value="查詢" /></td>
+                    <td><input type="submit" value="查詢" class="btn btn-primary" /></td>
                 </tr>
             </table>
 
@@ -39,7 +39,8 @@
                 <td>@aa.CustName</td>
                 <td>@aa.Orderdate</td>
                 <td>@aa.ShippedDate</td>
-
+                <td>@Html.ActionLink("修改", "EditOrder", new { id = aa.OrderId })</td>
+                <td>@Html.ActionLink("刪除", "DeleteOrder", new { id = aa.OrderId })</td>
             </tr>
            }
         </table>

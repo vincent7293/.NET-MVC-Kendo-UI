@@ -75,5 +75,13 @@ namespace WebApplication1.Controllers
             orderservice.InsertOrder(order);
             return View("InsertOrder");
         }
+
+        [HttpGet()]
+        public ActionResult DeleteOrder(int id)
+        {
+            Models.OrderService orderservice = new Models.OrderService();
+            ViewBag.effectData = orderservice.DeleteOrder(id.ToString());
+            return RedirectToAction("Index");
+        }
     }
 }

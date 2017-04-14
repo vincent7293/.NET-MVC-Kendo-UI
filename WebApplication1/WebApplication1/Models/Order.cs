@@ -38,19 +38,19 @@ namespace WebApplication1.Models
         /// 訂單日期
         /// </summary>
         [Display(Name = "訂單日期")]
-        public DateTime? Orderdate { get; set; }
+        public DateTime Orderdate { get; set; }
 
         /// <summary>
         /// 需要日期
         /// </summary>
         [Display(Name = "需要日期")]
-        public DateTime? RequiredDate { get; set; }
+        public DateTime RequiredDate { get; set; }
 
         /// <summary>
         /// 出貨日期
         /// </summary>
         [Display(Name = "出貨日期")]
-        public DateTime? ShippedDate { get; set; }
+        public DateTime ShippedDate { get; set; }
 
         /// <summary>
         /// 出貨公司代號
