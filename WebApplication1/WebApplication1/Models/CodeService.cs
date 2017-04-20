@@ -13,7 +13,7 @@ namespace WebApplication1.Models
         {
             return System.Configuration.ConfigurationManager.ConnectionStrings["DBConn"].ConnectionString.ToString();
         }
-        public List<Models.Order> GetCustomerList()
+        public List<Order> GetCustomerList()
         {
             DataTable dt = new DataTable();
             string sql = @"SELECT [CustomerID] as CustId,[CompanyName] as CustName
@@ -29,9 +29,8 @@ namespace WebApplication1.Models
 
             }
             return this.MapCustomerDataToList(dt);
-
         }
-        public List<Models.Order> GetEmpList()
+        public List<Order> GetEmpList()
         {
             DataTable dt = new DataTable();
             string sql = @"SELECT [EmployeeID] as EmpId,[FirstName]+' '+[LastName] as EmpName FROM [HR].[Employees]";
@@ -48,7 +47,7 @@ namespace WebApplication1.Models
             return this.MapEmpDataToList(dt);
 
         }
-        public List<Models.Order> GetShipperList()
+        public List<Order> GetShipperList()
         {
             DataTable dt = new DataTable();
             string sql = @"SELECT [ShipperID] as ShipperId ,[CompanyName] as ShipperName FROM [Sales].[Shippers]";

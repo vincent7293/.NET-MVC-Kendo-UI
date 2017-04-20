@@ -29,7 +29,7 @@
             <tr>
                 <td>@Html.LabelFor(model => model.CustName, htmlAttributes: new { @class = "control-label" })</td>
                     <td>
-                        @Html.DropDownList("CustId", (IEnumerable<SelectListItem>)ViewBag.CustId)
+                        @Html.DropDownList("CustId")
                     @*@Html.DropDownListFor(model => model.CustId,(IEnumerable<SelectListItem>)ViewBag.custData)*@
                 </td>
             </tr>

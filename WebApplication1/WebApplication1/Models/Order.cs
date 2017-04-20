@@ -37,18 +37,24 @@ namespace WebApplication1.Models
         /// <summary>
         /// 訂單日期
         /// </summary>
+        [DataType(DataType.DateTime), Required]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         [Display(Name = "訂單日期")]
         public DateTime Orderdate { get; set; }
 
         /// <summary>
         /// 需要日期
         /// </summary>
+        [DataType(DataType.DateTime), Required]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         [Display(Name = "需要日期")]
         public DateTime RequiredDate { get; set; }
 
         /// <summary>
         /// 出貨日期
         /// </summary>
+        [DataType(DataType.DateTime), Required]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         [Display(Name = "出貨日期")]
         public DateTime ShippedDate { get; set; }
 
@@ -67,7 +73,7 @@ namespace WebApplication1.Models
         /// 運費
         /// </summary>
         [Display(Name = "運費")]
-        public double Freight { get; set; }
+        public Double Freight { get; set; }
 
         /// <summary>
         /// 出貨說明
