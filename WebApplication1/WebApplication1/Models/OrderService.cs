@@ -13,6 +13,7 @@ namespace WebApplication1.Models
         {
             return System.Configuration.ConfigurationManager.ConnectionStrings["DBConn"].ConnectionString.ToString();
         }
+
         public void InsertOrder(Models.Order order)
         {
             string sql = @"INSERT INTO [Sales].[Orders]
@@ -121,10 +122,10 @@ DELETE FROM [Sales].[Orders]
             }
         }
 
-        public List<Models.Order> GetOrderById(string orderId)
+        public List<Models.Order> GetOrderByCondition(Models.Order searchCondition)
         {
             DataTable dt = new DataTable();
-            string sql = @"SELECT TOP (100) O.OrderID, O.CustomerID as CustId, C.CompanyName as CustName, E.EmployeeID as EmpId
+            string sql = @"SELECT  O.OrderID, O.CustomerID as CustId, C.CompanyName as CustName, E.EmployeeID as EmpId
 ,E.FirstName+E.LastName as EmpName,  O.OrderDate as OrderDate
 ,O.RequiredDate as RequiredDate,O.ShippedDate as ShippedDate
 , S.ShipperID
@@ -134,13 +135,16 @@ DELETE FROM [Sales].[Orders]
   JOIN [HR].[Employees] as E ON O.EmployeeID=E.EmployeeID
   JOIN [Sales].[Customers] as C ON O.CustomerID=C.CustomerID
   JOIN [Sales].[Shippers] as S ON O.ShipperID=S.ShipperID
-WHERE O.OrderID=@OrderId";
+WHERE (O.OrderID = @OrderId OR @OrderId='')
+AND  (O.CustomerID = @CustomerID OR @CustomerID='')";
 
             using (SqlConnection conn = new SqlConnection(this.GetDBConnectionString()))
             {
                 conn.Open();
                 SqlCommand cmd = new SqlCommand(sql, conn);
-                cmd.Parameters.Add(new SqlParameter("@OrderId", orderId));
+                cmd.Parameters.Add(new SqlParameter("@OrderId", searchCondition.OrderId.ToString()=="0" ? string.Empty : searchCondition.OrderId.ToString()));
+                cmd.Parameters.Add(new SqlParameter("@CustomerID", searchCondition.CustId.ToString()=="0" ? string.Empty : searchCondition.CustId.ToString()));
+
                 SqlDataAdapter sqlAdapter = new SqlDataAdapter(cmd);
                 sqlAdapter.Fill(dt);
                 conn.Close();
@@ -148,6 +152,35 @@ WHERE O.OrderID=@OrderId";
             }
             return this.MapOrderDataToList(dt);
         
+        }
+        public List<Models.Order> GetOrderById(String id)
+        {
+            DataTable dt = new DataTable();
+            string sql = @"SELECT  O.OrderID, O.CustomerID as CustId, C.CompanyName as CustName, E.EmployeeID as EmpId
+,E.FirstName+E.LastName as EmpName,  O.OrderDate as OrderDate
+,O.RequiredDate as RequiredDate,O.ShippedDate as ShippedDate
+, S.ShipperID
+, S.CompanyName as ShipperName,convert(float, O.Freight, 1) as Freight, O.ShipName ,O.ShipAddress, O.ShipCity, O.ShipRegion
+,O.ShipPostalCode , O.ShipCountry
+  FROM [Sales].[Orders] as O 
+  JOIN [HR].[Employees] as E ON O.EmployeeID=E.EmployeeID
+  JOIN [Sales].[Customers] as C ON O.CustomerID=C.CustomerID
+  JOIN [Sales].[Shippers] as S ON O.ShipperID=S.ShipperID
+WHERE O.OrderID = @OrderId";
+
+            using (SqlConnection conn = new SqlConnection(this.GetDBConnectionString()))
+            {
+                conn.Open();
+                SqlCommand cmd = new SqlCommand(sql, conn);
+                cmd.Parameters.Add(new SqlParameter("@OrderId", id));
+
+                SqlDataAdapter sqlAdapter = new SqlDataAdapter(cmd);
+                sqlAdapter.Fill(dt);
+                conn.Close();
+
+            }
+            return this.MapOrderDataToList(dt);
+
         }
         public List<Models.Order> GetAllOrder()
         {
