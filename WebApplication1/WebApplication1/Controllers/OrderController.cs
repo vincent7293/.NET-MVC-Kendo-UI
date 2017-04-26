@@ -14,7 +14,13 @@ namespace WebApplication1.Controllers
         {
             Models.OrderService orderservice = new Models.OrderService();
             List<Order> order= orderservice.GetAllOrder();
-
+            Models.CodeService customerservice = new Models.CodeService();
+            List<SelectListItem> empData = new List<SelectListItem>();
+            List<SelectListItem> shipperData = new List<SelectListItem>();
+            empData = LoadSelectListItem("Emp", 0);
+            shipperData = LoadSelectListItem("Shipper", 0);
+            ViewBag.EmpId = empData;
+            ViewBag.ShipperId = shipperData;
             return View(order);
         }
 
@@ -27,7 +33,6 @@ namespace WebApplication1.Controllers
         {
             Models.OrderService orderservice = new Models.OrderService();
             List<Order> order = orderservice.GetOrderByCondition(searchCondition);
-
             return View(order);
         }
 
@@ -90,6 +95,7 @@ namespace WebApplication1.Controllers
             Models.CodeService customerservice = new Models.CodeService();
             Models.OrderService orderservice = new Models.OrderService();
             Order order = new Order();
+            List<OrderDetail> orderdetail = new List<OrderDetail>();
             List<SelectListItem> custData = new List<SelectListItem>();
             List<SelectListItem> empData = new List<SelectListItem>();
             List<SelectListItem> shipperData = new List<SelectListItem>();
@@ -111,36 +117,26 @@ namespace WebApplication1.Controllers
                 defaultEmpId = oo.EmpId;
                 defaultShipperId = oo.ShipperId;
             }
-            foreach (var aa in customerservice.GetCustomerList())
+            foreach(var od in orderservice.GetOrderDetailById(id))
             {
-                custData.Add(new SelectListItem()
+                orderdetail.Add(new OrderDetail()
                 {
-                    Text = aa.CustName,
-                    Value = aa.CustId.ToString(),
-                    Selected = (aa.CustId == defaultCustId ? true : false)
+                    OrderId = od.OrderId,
+                    ProductId = od.ProductId,
+                    ProductName = od.ProductName,
+                    UnitPrice = od.UnitPrice,
+                    Qty = od.Qty
                 });
+                
             }
-            foreach (var bb in customerservice.GetEmpList())
-            {
-                empData.Add(new SelectListItem()
-                {
-                    Text = bb.EmpName,
-                    Value = bb.EmpId.ToString(),
-                    Selected = (bb.EmpId == defaultEmpId ? true : false)
-                });
-            }
-            foreach (var cc in customerservice.GetShipperList())
-            {
-                shipperData.Add(new SelectListItem()
-                {
-                    Text = cc.ShipperName,
-                    Value = cc.ShipperId.ToString(),
-                    Selected = (cc.ShipperId == defaultShipperId ? true : false)
-                });
-            }
+            custData = LoadSelectListItem("Cust", defaultCustId);
+            empData = LoadSelectListItem("Emp", defaultEmpId);
+            shipperData = LoadSelectListItem("Shipper", defaultShipperId);
+            
             ViewBag.CustId = custData;
             ViewBag.EmpId = empData;
             ViewBag.ShipperId = shipperData;
+            ViewBag.OrderDetail = orderdetail;
             return View(order);
         }
         [HttpPost()]
@@ -149,6 +145,62 @@ namespace WebApplication1.Controllers
             Models.OrderService orderservice = new Models.OrderService();
             orderservice.UpdateOrder(order);
             return RedirectToAction("Index");
+        }
+
+
+        /// <summary>
+        /// 取得下拉式選單內容
+        /// </summary>
+        /// <param name="listName"></param>
+        /// <param name="defaultId"></param>
+        /// <returns></returns>
+        public List<SelectListItem> LoadSelectListItem(String listName,int defaultId)
+        {
+            Models.CodeService customerservice = new Models.CodeService();
+            List<SelectListItem> resultList = new List<SelectListItem>();
+            resultList.Add(new SelectListItem()
+            {
+                Text = "",
+                Value = "",
+                Selected = ( 0 == defaultId ? true : false)
+            });
+            switch (listName)
+            {
+                case "Cust":
+                    foreach (var aa in customerservice.GetCustomerList())
+                    {
+                        resultList.Add(new SelectListItem()
+                        {
+                            Text = aa.CustName,
+                            Value = aa.CustId.ToString(),
+                            Selected = (aa.CustId == defaultId ? true : false)
+                        });
+                    }
+                    break;
+                case "Emp":
+                    foreach (var bb in customerservice.GetEmpList())
+                    {
+                        resultList.Add(new SelectListItem()
+                        {
+                            Text = bb.EmpName,
+                            Value = bb.EmpId.ToString(),
+                            Selected = (bb.EmpId == defaultId ? true : false)
+                        });
+                    }
+                    break;
+                case "Shipper":
+                    foreach (var cc in customerservice.GetShipperList())
+                    {
+                        resultList.Add(new SelectListItem()
+                        {
+                            Text = cc.ShipperName,
+                            Value = cc.ShipperId.ToString(),
+                            Selected = (cc.ShipperId == defaultId ? true : false)
+                        });
+                    }
+                    break;
+            }
+            return resultList;
         }
     }
 }
