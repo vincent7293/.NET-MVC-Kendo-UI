@@ -2,6 +2,7 @@
 
 @{
     ViewBag.Title = "修改訂單";
+    List<int> productidlist = new List<int>();
 }
 
 <h4>修改訂單</h4>
@@ -120,7 +121,7 @@
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Save" class="btn btn-default" />
+                <input type="submit" value="更新訂單" class="btn btn-primary" />
             </div>
         </div>
             <h4>訂單明細</h4>
@@ -132,17 +133,22 @@
                     <td>小計</td>
                     <td></td>
                 </tr>
+                
                 @foreach (var od in ViewBag.OrderDetail)
                 {
+                        productidlist.Add(od.ProductId);
                     <tr>
                         <td>@od.ProductName</td>
-                        <td><input type="number" value="@od.UnitPrice" id="UnitPrice-@od.OrderId" onchange="updateSum(@od.OrderId)"/></td>
-                        <td><input type="number" value="@od.Qty" id="Qty-@od.OrderId"  onchange="updateSum(@od.OrderId)"/></td>
-                        <td><p id="Sum-@od.OrderId"></p></td>
+                        <td><input type="number" value="@od.UnitPrice" id="UnitPrice-@od.ProductId" name="UnitPrice[@od.ProductId]" onchange="updateSum(@od.ProductId)"/></td>
+                        <td><input type="number" value="@od.Qty" id="Qty-@od.ProductId" name="Qty[@od.ProductId]" onchange="updateSum(@od.ProductId)"/></td>
+                        <td><p id="Sum-@od.ProductId"></p></td>
                         <td></td>
                     </tr>
+                    
                 }
             </table>
+            <input type="button" id="submitOrderDetail" class="btn btn-warning" value="更新訂單明細"/>
+            <div id="updateResult"></div>
     </div>
 }
 
@@ -153,11 +159,45 @@
     @Scripts.Render("~/bundles/jqueryval")
 }
 <script>
-    function updateSum(orderid) {
-        console.log(document.getElementById("UnitPrice-" + orderid).value)
-        var UnitPrice = document.getElementById("UnitPrice-" + orderid).value
-        var Qty = document.getElementById("Qty-" + orderid).value
-        var result = UnitPrice * Qty
-        document.getElementById("Sum-" + orderid).innerHTML = result.toFixed(2)
+    @{ 
+        string jsonlist = Json.Encode(productidlist);
     }
+    var productIdList = @jsonlist;
+    console.log(GetOrderDetailList());
+    function updateSum(productid) {
+        console.log("updated");
+        var UnitPrice = document.getElementById("UnitPrice-" + productid).value;
+        var Qty = document.getElementById("Qty-" + productid).value;
+        var result = UnitPrice * Qty;
+        document.getElementById("Sum-" + productid).innerHTML = result.toFixed(2);
+    }
+    $(document).ready(function () {
+        $("#submitOrderDetail").click(function () {
+            var data = JSON.stringify({ odList: GetOrderDetailList() });
+            $.ajax({
+                type: "Post",
+                data: data,
+                url: "@Url.Action("UpdateOrderDetail")",
+                dataType: "text",
+                contentType: "application/json; charset=UTF-8",
+                success: function (result) {
+                    $("#updateResult").html(result);
+                }
+
+            });
+        });
+    });
+    function GetOrderDetailList() {
+        var orderDetailList = [];
+        for (var i = 0; i < productIdList.length; i++) {
+            var orderDetail = {};
+            orderDetail.OrderId = document.getElementById("OrderId").value;
+            orderDetail.ProductId = productIdList[i];
+            orderDetail.UnitPrice = document.getElementById("UnitPrice-" + productIdList[i]).value;
+            orderDetail.Qty = document.getElementById("Qty-" + productIdList[i]).value;
+            orderDetailList[i] = orderDetail;
+            console.log(orderDetail);
+        }
+        return orderDetailList;
+    }  
 </script>

@@ -33,6 +33,6 @@ namespace WebApplication1.Models
         /// 數量
         /// </summary>
         [Display(Name = "數量")]
-        public int Qty { get; set; }
+        public Int16 Qty { get; set; }
     }
 }

@@ -36,7 +36,6 @@ namespace WebApplication1.Controllers
             return View(order);
         }
 
-
         public ActionResult InsertOrder()
         {
             Models.CodeService customerservice = new Models.CodeService();
@@ -145,6 +144,16 @@ namespace WebApplication1.Controllers
             Models.OrderService orderservice = new Models.OrderService();
             orderservice.UpdateOrder(order);
             return RedirectToAction("Index");
+        }
+        [HttpPost]
+        public String UpdateOrderDetail(List<OrderDetail> odList)
+        {
+            Models.OrderService orderservice = new Models.OrderService();
+            foreach(OrderDetail od in odList)
+            {
+                orderservice.UpdateOrderDetail(od);
+            }
+            return "已更新";
         }
 
 

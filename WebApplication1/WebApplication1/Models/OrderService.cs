@@ -121,6 +121,30 @@ DELETE FROM [Sales].[Orders]
             }
         }
 
+        public void UpdateOrderDetail(Models.OrderDetail orderdetail)
+        {
+            string sql = @"UPDATE [Sales].[OrderDetails]
+   SET [UnitPrice] = @unitprice
+      ,[Qty] = @qty
+      
+ WHERE [OrderID] = @orderid AND [ProductID] = @productid
+            ";
+
+            using (SqlConnection conn = new SqlConnection(this.GetDBConnectionString()))
+            {
+                conn.Open();
+                SqlCommand cmd = new SqlCommand(sql, conn);
+                cmd.Parameters.Add(new SqlParameter("@orderid", orderdetail.OrderId));
+                cmd.Parameters.Add(new SqlParameter("@productid", orderdetail.ProductId));
+                cmd.Parameters.Add(new SqlParameter("@unitprice", orderdetail.UnitPrice));
+                cmd.Parameters.Add(new SqlParameter("@qty", orderdetail.Qty));
+
+                cmd.ExecuteNonQuery();
+                conn.Close();
+            }
+        }
+
+
         public List<Models.Order> GetOrderByCondition(Models.Order searchCondition)
         {
             DataTable dt = new DataTable();

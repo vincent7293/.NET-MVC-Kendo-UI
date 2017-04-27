@@ -170,8 +170,6 @@
     <Compile Include="App_Start\IdentityConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
-    <Compile Include="Areas\Employee\Controllers\Default1Controller.cs" />
-    <Compile Include="Areas\Employee\EmployeeAreaRegistration.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LayoutTestController.cs" />
@@ -264,8 +262,6 @@
     <Content Include="Content\bootstrap.css.map" />
     <Content Include="Content\bootstrap-theme.min.css.map" />
     <Content Include="Content\bootstrap-theme.css.map" />
-    <Content Include="Areas\Employee\Views\web.config" />
-    <Content Include="Areas\Employee\Views\Default1\Index.cshtml" />
     <EntityDeploy Include="Models\TSQL2012.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
       <LastGenOutput>TSQL2012.Designer.cs</LastGenOutput>
@@ -342,8 +338,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Areas\Employee\Models\" />
-    <Folder Include="Areas\Employee\Views\Shared\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
