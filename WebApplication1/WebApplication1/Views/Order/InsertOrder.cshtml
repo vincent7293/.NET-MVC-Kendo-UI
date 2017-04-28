@@ -70,11 +70,7 @@
                     <td>@Html.LabelFor(model => model.ShipperName, htmlAttributes: new { @class = "control-label" })</td>
                     <td>
                         @Html.DropDownList("ShipperId")
-
-
-                @*@Html.DropDownListFor(model => model.ShipperId, (IEnumerable<SelectListItem>)ViewBag.shipperData)*@
                     </td>
-
             </tr>
             <tr>
                 <td>@Html.LabelFor(model => model.Freight, htmlAttributes: new { @class = "control-label" })</td>
@@ -125,6 +121,39 @@
         </table>
                     <input type="submit" value="新增" class="btn btn-primary" />
     }
+    <h4>訂單明細</h4>
+    <table class="table">
+        <tr>
+            <td>商品名稱</td>
+            <td>單價</td>
+            <td>數量</td>
+            <td>小計</td>
+        </tr>
+            <tr id="tmp">
+                <td> @Html.DropDownList("ProductId")</td>
+                <td><input type="number" id="UnitPrice[]"/></td>
+                <td><input type="number" name="Qty" min="1" /></td>
+                <td><p></p></td>
+
+            </tr>
+
+        
+    </table>
+    <input type="button" onclick="newProduct()" class="btn btn-warning" value="新增商品" />
 
 </body>
 </html>
+<script>
+    function newProduct() {
+        $("table").append(tmp).html();
+        
+    }
+    $(document).ready(function () {
+        var ProductData = @Html.Raw(Json.Encode(ViewBag.ProductData));
+        console.log(ProductData);
+        $("#ProductId").change(function () {
+            $(this).parent().next("td").children().val(ProductData[$(this).val()-1].UnitPrice);
+            
+        });
+    });
+</script>

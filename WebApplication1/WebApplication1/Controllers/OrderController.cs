@@ -42,6 +42,7 @@ namespace WebApplication1.Controllers
             List<SelectListItem> custData = new List<SelectListItem>();
             List<SelectListItem> empData = new List<SelectListItem>();
             List<SelectListItem> shipperData = new List<SelectListItem>();
+            List<SelectListItem> productData = new List<SelectListItem>();
 
             foreach (var aa in customerservice.GetCustomerList())
             {
@@ -67,9 +68,22 @@ namespace WebApplication1.Controllers
                     Value = cc.ShipperId.ToString()
                 });
             }
+            productData.Add(new SelectListItem(){Text = "",Value = ""});
+
+            foreach (var dd in customerservice.GetProductList())
+            {
+                productData.Add(new SelectListItem()
+                {
+                    Text = dd.ProductName,
+                    Value = dd.ProductId.ToString()
+                });
+            }
             ViewBag.CustId = custData;
             ViewBag.EmpId = empData;
             ViewBag.ShipperId = shipperData;
+            ViewBag.ProductId = productData;
+            ViewBag.ProductData = customerservice.GetProductList();
+
             return View();
         }
         [HttpPost()]
@@ -86,6 +100,14 @@ namespace WebApplication1.Controllers
             Models.OrderService orderservice = new Models.OrderService();
             ViewBag.effectData = orderservice.DeleteOrder(id.ToString());
             return RedirectToAction("Index");
+        }
+
+        [HttpPost()]
+        public String DeleteOrderDetail(int OrderId , int ProductId)
+        {
+            Models.OrderService orderservice = new Models.OrderService();
+            orderservice.DeleteOrderDetail(OrderId,  ProductId);
+            return ProductId.ToString();
         }
 
         [HttpGet]

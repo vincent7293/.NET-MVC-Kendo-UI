@@ -127,22 +127,28 @@
             <h4>訂單明細</h4>
             <table class="table">
                 <tr>
+                    <td>刪除</td>
                     <td>商品名稱</td>
                     <td>單價</td>
                     <td>數量</td>
                     <td>小計</td>
-                    <td></td>
                 </tr>
                 
                 @foreach (var od in ViewBag.OrderDetail)
                 {
-                        productidlist.Add(od.ProductId);
-                    <tr>
-                        <td>@od.ProductName</td>
+                    productidlist.Add(od.ProductId);
+                    var sum = od.UnitPrice * od.Qty;
+                    <tr id="@od.ProductId">
+                        <td>
+                        <button type="button" class="btn btn-danger" onclick="deleteOrderDetail(@od.OrderId , @od.ProductId)" aria-label="Left Align">
+                            <span class="glyphicon glyphicon glyphicon-remove" aria-hidden="true"></span>
+                        </button></td>
+
+                        <td> @od.ProductName</td>
                         <td><input type="number" value="@od.UnitPrice" id="UnitPrice-@od.ProductId" name="UnitPrice[@od.ProductId]" onchange="updateSum(@od.ProductId)"/></td>
                         <td><input type="number" value="@od.Qty" id="Qty-@od.ProductId" name="Qty[@od.ProductId]" onchange="updateSum(@od.ProductId)"/></td>
-                        <td><p id="Sum-@od.ProductId"></p></td>
-                        <td></td>
+                        <td><p id="Sum-@od.ProductId">@sum.ToString("f2")</p></td>
+                        
                     </tr>
                     
                 }
@@ -164,6 +170,7 @@
     }
     var productIdList = @jsonlist;
     console.log(GetOrderDetailList());
+
     function updateSum(productid) {
         console.log("updated");
         var UnitPrice = document.getElementById("UnitPrice-" + productid).value;
@@ -171,6 +178,7 @@
         var result = UnitPrice * Qty;
         document.getElementById("Sum-" + productid).innerHTML = result.toFixed(2);
     }
+
     $(document).ready(function () {
         $("#submitOrderDetail").click(function () {
             var data = JSON.stringify({ odList: GetOrderDetailList() });
@@ -187,6 +195,22 @@
             });
         });
     });
+    function deleteOrderDetail(orderid , productid){
+        var data = JSON.stringify({ OrderId: orderid , ProductId: productid});
+        $.ajax({
+            type: "Post",
+            data: data,
+            url: "@Url.Action("DeleteOrderDetail")",
+            dataType: "text",
+            contentType: "application/json; charset=UTF-8",
+            success: function (result) {
+                $( "#"+result ).remove();
+            }
+        });
+        
+
+
+    }
     function GetOrderDetailList() {
         var orderDetailList = [];
         for (var i = 0; i < productIdList.length; i++) {

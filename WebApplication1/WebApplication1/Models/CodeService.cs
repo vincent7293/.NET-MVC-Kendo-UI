@@ -64,6 +64,23 @@ namespace WebApplication1.Models
             return this.MapShipperDataToList(dt);
 
         }
+        public List<OrderDetail> GetProductList()
+        {
+            DataTable dt = new DataTable();
+            string sql = @"SELECT ProductId, ProductName, convert(float, UnitPrice, 1) as UnitPrice FROM [Production].[Products] ";
+
+            using (SqlConnection conn = new SqlConnection(this.GetDBConnectionString()))
+            {
+                conn.Open();
+                SqlCommand cmd = new SqlCommand(sql, conn);
+                SqlDataAdapter sqlAdapter = new SqlDataAdapter(cmd);
+                sqlAdapter.Fill(dt);
+                conn.Close();
+
+            }
+            return this.MapProductDataToList(dt);
+
+        }
         private List<Models.Order> MapCustomerDataToList(DataTable orderData)
         {
             List<Models.Order> result = new List<Order>();
@@ -106,5 +123,22 @@ namespace WebApplication1.Models
             }
             return result;
         }
+        private List<Models.OrderDetail> MapProductDataToList(DataTable orderData)
+        {
+            List<Models.OrderDetail> result = new List<OrderDetail>();
+
+            foreach (DataRow row in orderData.Rows)
+            {
+                result.Add(new OrderDetail()
+                {
+                    ProductId = (int)row["ProductId"],
+                    ProductName = row["ProductName"].ToString(),
+                    UnitPrice = (Double)row["UnitPrice"],
+
+                });
+            }
+            return result;
+        }
+
     }
 }

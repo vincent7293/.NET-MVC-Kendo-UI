@@ -69,10 +69,25 @@ DELETE FROM [Sales].[Orders]
                 SqlCommand cmd = new SqlCommand(sql, conn);
                 cmd.Parameters.Add(new SqlParameter("@OrderId", orderId));
                 effectData = cmd.ExecuteNonQuery();
-         
+
                 conn.Close();
             }
             return effectData;
+        }
+
+        public void DeleteOrderDetail(int OrderId, int ProductId)
+        {
+            string sql = @"DELETE FROM [Sales].[OrderDetails]
+      WHERE [OrderID]=@OrderId AND [ProductId]=@ProductId";
+            using (SqlConnection conn = new SqlConnection(this.GetDBConnectionString()))
+            {
+                conn.Open();
+                SqlCommand cmd = new SqlCommand(sql, conn);
+                cmd.Parameters.Add(new SqlParameter("@OrderId", OrderId));
+                cmd.Parameters.Add(new SqlParameter("@ProductId", ProductId));
+                cmd.ExecuteNonQuery();
+                conn.Close();
+            }
         }
 
         public void UpdateOrder(Models.Order order)
@@ -144,7 +159,6 @@ DELETE FROM [Sales].[Orders]
             }
         }
 
-
         public List<Models.Order> GetOrderByCondition(Models.Order searchCondition)
         {
             DataTable dt = new DataTable();
@@ -158,7 +172,7 @@ DELETE FROM [Sales].[Orders]
   JOIN [HR].[Employees] as E ON O.EmployeeID=E.EmployeeID
   JOIN [Sales].[Customers] as C ON O.CustomerID=C.CustomerID
   JOIN [Sales].[Shippers] as S ON O.ShipperID=S.ShipperID
-WHERE (O.OrderID = @OrderId OR @OrderId = '')
+WHERE (O.OrderID Like '%'+@OrderId+'%' OR @OrderId = '')
 AND  (C.CompanyName Like '%'+@CustName+'%')
 AND  (E.EmployeeID = @EmpId OR @EmpId = '')
 AND  (S.ShipperID = @ShipperId OR @ShipperId = '')
