@@ -87,10 +87,10 @@ namespace WebApplication1.Controllers
             return View();
         }
         [HttpPost()]
-        public ActionResult InsertOrder(Models.Order order)
+        public ActionResult InsertOrder(Models.Order order,List<int> ProductId,List<double> UnitPrice,List<int> Qty)
         {
             Models.OrderService orderservice = new Models.OrderService();
-            orderservice.InsertOrder(order);
+            orderservice.InsertOrder(order, ProductId, UnitPrice, Qty);
             return RedirectToAction("Index");
         }
 

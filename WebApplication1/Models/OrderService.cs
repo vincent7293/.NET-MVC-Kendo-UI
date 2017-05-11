@@ -14,22 +14,22 @@ namespace WebApplication1.Models
             return System.Configuration.ConfigurationManager.ConnectionStrings["DBConn"].ConnectionString.ToString();
         }
 
-        public void InsertOrder(Models.Order order)
+        public void InsertOrder(Models.Order order, List<int> ProductId, List<double> UnitPrice, List<int> Qty)
         {
             string sql = @"INSERT INTO [Sales].[Orders]
            ([CustomerID],[EmployeeID],[OrderDate],[RequiredDate],[ShippedDate],[ShipperID]
            ,[Freight],[ShipName],[ShipAddress],[ShipCity],[ShipRegion],[ShipPostalCode],[ShipCountry])
+            OUTPUT INSERTED.OrderID
      VALUES
            (
             @custid,@empid,@orderdate,@requireddate,@shippeddate,@shipperid,
             @freight,@shipname,@shipaddress,@shipcity,@shipregion,@shippostalcode,@shipcountry
             )
-            select scope_identity()
             ";
             string format1 = order.Orderdate.ToString("yyyy-MM-dd");
             string format2 = order.RequiredDate.ToString("yyyy-MM-dd");
             string format3 = order.ShippedDate.ToString("yyyy-MM-dd");
-
+            int orderId;
             using (SqlConnection conn = new SqlConnection(this.GetDBConnectionString()))
             {
                 conn.Open();
@@ -48,10 +48,34 @@ namespace WebApplication1.Models
                 cmd.Parameters.Add(new SqlParameter("@shippostalcode", order.ShipPostalCode));
                 cmd.Parameters.Add(new SqlParameter("@shipcountry", order.ShipCountry));
 
-                //orderId = (int)cmd.ExecuteScalar();
-                cmd.ExecuteNonQuery();
+                orderId = (int)cmd.ExecuteScalar();
+                //cmd.ExecuteNonQuery();
                 conn.Close();
 
+            }
+
+            for (int i = 0; i < ProductId.Count; i++)
+            {
+
+
+                string sql2 = @"INSERT INTO [Sales].[OrderDetails]
+                               ([OrderID] ,[ProductID] ,[UnitPrice] ,[Qty] ,[Discount])
+                                VALUES
+                               (  @orderid, @productid, @unitprice, @qty, 0 )
+                                ";
+                using (SqlConnection conn = new SqlConnection(this.GetDBConnectionString()))
+                {
+                    conn.Open();
+                    SqlCommand cmd = new SqlCommand(sql2, conn);
+                    cmd.Parameters.Add(new SqlParameter("@orderid", orderId));
+                    cmd.Parameters.Add(new SqlParameter("@productid", ProductId[i]));
+                    cmd.Parameters.Add(new SqlParameter("@unitprice", UnitPrice[i]));
+                    cmd.Parameters.Add(new SqlParameter("@qty", Qty[i]));
+
+                    cmd.ExecuteNonQuery();
+                    conn.Close();
+
+                }
             }
         }
 
