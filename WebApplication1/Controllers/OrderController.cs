@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Script.Serialization;
 using WebApplication1.Models;
 
 namespace WebApplication1.Controllers
@@ -12,8 +13,7 @@ namespace WebApplication1.Controllers
         // GET: Order
         public ActionResult Index()
         {
-            Models.OrderService orderservice = new Models.OrderService();
-            List<Order> order= orderservice.GetAllOrder();
+            
             Models.CodeService customerservice = new Models.CodeService();
             List<SelectListItem> empData = new List<SelectListItem>();
             List<SelectListItem> shipperData = new List<SelectListItem>();
@@ -21,7 +21,14 @@ namespace WebApplication1.Controllers
             shipperData = LoadSelectListItem("Shipper", 0);
             ViewBag.EmpId = empData;
             ViewBag.ShipperId = shipperData;
-            return View(order);
+            return View();
+        }
+        [HttpGet]
+        public JsonResult GetAllOrder()
+        {
+            Models.OrderService orderservice = new Models.OrderService();
+            List<Order> order = orderservice.GetAllOrder();
+            return Json(order, JsonRequestBehavior.AllowGet);
         }
 
         public ActionResult SearchOrder()

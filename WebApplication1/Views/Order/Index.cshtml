@@ -64,7 +64,7 @@
             </table>
 
         }
-        <table class="table">
+        @*<table class="table">
             <tr>
                 <td>訂單編號</td>
                 <td>客戶名稱</td>
@@ -85,7 +85,61 @@
                     <td>@Html.ActionLink("刪除", "DeleteOrder", new { id = aa.OrderId })</td>
                 </tr>
             }
-        </table>
+        </table>*@
+        <div id="grid"></div>
+        
     </div>
 </body>
+
 </html>
+<script>
+    var dataSource = new kendo.data.DataSource({
+        transport: {
+            read: {
+                url: "GetAllOrder",
+                dataType: "json"
+            }
+        },
+        pageSize: 10
+    });
+    $(document).ready(function () {
+
+        $("#grid").kendoGrid({
+            dataSource: dataSource,
+            pageable: true,
+            parameterMap: function (data, operation) {
+                console.log("pm");
+                if (operation == "read") {
+                    for (key in data) {
+                        var d = new Date(parseInt(data[key].Orderdate.substr(6)));
+                        console.log(d);
+                        data[key].Orderdate = d.toString("yyyy-MM-dd");
+                    }
+                                          
+                    return data;
+                }
+            },
+            columns: [
+        {
+            field: "OrderId",
+            title: "OrderId"
+        },
+        {
+            field: "CustName",
+            title: "CustName",
+           
+        },
+        {
+            field: "Orderdate",
+            title: "Orderdate"
+
+        },
+        {
+            field: "ShippedDate",
+            title: "ShippedDate",
+
+        }]
+        });
+    });
+    
+</script>
