@@ -131,13 +131,14 @@
         },
         {
             field: "Orderdate",
-            title: "Orderdate"
+            title: "Orderdate",
+            template: "#= kendo.toString(kendo.parseDate(Orderdate, 'yyyy-MM-dd'), 'yyyy/MM/dd') #"
 
         },
         {
             field: "ShippedDate",
             title: "ShippedDate",
-
+            template: "#= kendo.toString(kendo.parseDate(Orderdate, 'yyyy-MM-dd'), 'yyyy/MM/dd') #"
         }]
         });
     });
