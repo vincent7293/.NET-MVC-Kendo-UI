@@ -64,28 +64,6 @@
             </table>
 
         }
-        @*<table class="table">
-            <tr>
-                <td>訂單編號</td>
-                <td>客戶名稱</td>
-                <td>訂購日期</td>
-                <td>出貨日期</td>
-                <td></td>
-                <td></td>
-            </tr>
-
-            @foreach (var aa in Model)
-            {
-                <tr>
-                    <td>@aa.OrderId</td>
-                    <td>@aa.CustName</td>
-                    <td>@aa.Orderdate.ToString("yyyy/MM/dd")</td>
-                    <td>@aa.ShippedDate.ToString("yyyy/MM/dd")</td>
-                    <td>@Html.ActionLink("修改", "UpdateOrder", new { id = aa.OrderId })</td>
-                    <td>@Html.ActionLink("刪除", "DeleteOrder", new { id = aa.OrderId })</td>
-                </tr>
-            }
-        </table>*@
         <div id="grid"></div>
         
     </div>
@@ -107,18 +85,6 @@
         $("#grid").kendoGrid({
             dataSource: dataSource,
             pageable: true,
-            parameterMap: function (data, operation) {
-                console.log("pm");
-                if (operation == "read") {
-                    for (key in data) {
-                        var d = new Date(parseInt(data[key].Orderdate.substr(6)));
-                        console.log(d);
-                        data[key].Orderdate = d.toString("yyyy-MM-dd");
-                    }
-                                          
-                    return data;
-                }
-            },
             columns: [
         {
             field: "OrderId",
