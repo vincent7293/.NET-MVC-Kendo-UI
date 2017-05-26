@@ -18,13 +18,13 @@
             <table class="table">
                 <tr>
                     <td>訂單編號</td>
-                    <td><input type="text" name="OrderId" id="OrderId" /></td>
+                    <td><input type="text" class="k-textbox" name="OrderId" id="OrderId" /></td>
                     <td></td>
                     <td></td>
                 </tr>
                 <tr>
                     <td>客戶名稱</td>
-                    <td><input type="text" name="CustName" id="CustName" /></td>
+                    <td><input type="text" class="k-textbox" name="CustName" id="CustName" /></td>
                     <td></td>
                     <td></td>
                 </tr>
@@ -54,8 +54,9 @@
                 </tr>
                 <tr>
                     <td></td>
-                    <td><input type="submit" value="查詢" class="btn btn-primary" />
-                        <input type="reset" value="清空" class="btn btn-default" />
+                    <td>
+                        <input type="submit" value="查詢" class="k-button" />
+                        <input type="reset" value="清空" class="k-button" />
                     </td>
                     <td></td>
                     <td></td>
@@ -65,28 +66,108 @@
 
         }
         <div id="grid"></div>
-        
     </div>
 </body>
 
 </html>
-<script>
-    var dataSource = new kendo.data.DataSource({
-        transport: {
-            read: {
-                url: "GetAllOrder",
-                dataType: "json"
-            },
-            destroy: {
-                url: "DeleteOrder",
-                dataType: "json"
-            }
-        },
-        pageSize: 10
+<script type="text/javascript">
+
+    $(function () {
+        InitGrid();
     });
-    $(document).ready(function () {
+
+    function InitGrid() {
+        $("#Orderdate").kendoDatePicker();
+        $("#ShippedDate").kendoDatePicker();
+        $("#RequiredDate").kendoDatePicker();
+        $("#EmpId").kendoComboBox();
+        $("#ShipperId").kendoComboBox();
+        $("#OrderId").kendoMaskedTextBox({
+            mask: "11000"
+        });
+        var dataSource = new kendo.data.DataSource({
+            transport: {
+                read: {
+                    url: "GetAllOrder",
+                    dataType: "json"
+                },
+                update: {
+                    url: "UpdateOrder",
+                    type: "POST",
+                    dataType: "json"
+                },
+                destroy: {
+                    url: "DeleteOrder",
+                    type: "POST",
+                    dataType: "json",
+                    data: {
+                        id: "11085"
+                    }
+
+                },
+            },
+            pageSize: 10,
+            schema: {
+                model: {
+                    id: "OrderId",
+                    fields: {
+                        OrderId: {
+                            editable: false,
+                            // a defaultValue will not be assigned (default value is false)
+                            nullable: true
+                        },
+                        CustId: {
+                            type: "number"
+                        },
+                        CustName: {
+                            type: "String"
+                        },
+                        EmpId: {
+                            type: "number"
+                        },
+                        EmpName: {
+                            type: "String"
+                        },
+                        Orderdate: {
+                            type: "date"
+                        },
+                        RequiredDate: {
+                            type: "date"
+                        },
+                        ShippedDate: {
+                            type: "date"
+                        },
+                        ShipperName: {
+                            type: "String"
+                        },
+                        Freight: {
+                            type: "number"
+                        },
+                        ShipName: {
+                            type: "String"
+                        },
+                        ShipAddress: {
+                            type: "String"
+                        },
+                        ShipCity: {
+                            type: "String"
+                        },
+                        ShipRegion: {
+                            type: "String"
+                        },
+                        ShipPostalCode: {
+                            type: "String"
+                        },
+                        ShipCountry: {
+                            type: "String"
+                        }
+                    }
+                }
+            }
+        });
 
         $("#grid").kendoGrid({
+            editable: "inline",
             dataSource: dataSource,
             selectable: true,
             scrollable: false,
@@ -94,35 +175,134 @@
             resizable: true,
             pageable: {
                 refresh: true,
-                pageSizes: true,
-                buttonCount: 10
+                pageSizes: true
             },
             columns: [
-        {
-            field: "OrderId",
-            title: "OrderId"
-        },
-        {
-            field: "CustName",
-            title: "CustName",
-           
-        },
-        {
-            field: "Orderdate",
-            title: "Orderdate",
-            template: "#= kendo.toString(kendo.parseDate(Orderdate, 'yyyy-MM-dd'), 'yyyy/MM/dd') #"
+                {
+                    field: "OrderId",
+                    title: "OrderId"
+                },
+                {
+                    field: "CustName",
+                    title: "CustName",
 
-        },
-        {
-            field: "ShippedDate",
-            title: "ShippedDate",
-            template: "#= kendo.toString(kendo.parseDate(Orderdate, 'yyyy-MM-dd'), 'yyyy/MM/dd') #"
-        },
-        {
-            command: "destroy",
-            title: "&nbsp;"
-        }]
+                },
+                {
+                    field: "Orderdate",
+                    title: "Orderdate",
+                    template: "#= kendo.toString(kendo.parseDate(Orderdate, 'yyyy/MM/dd'), 'yyyy/MM/dd') #"
+
+                },
+                {
+                    field: "ShippedDate",
+                    title: "ShippedDate",
+                    template: "#= kendo.toString(kendo.parseDate(ShippedDate, 'yyyy-MM-dd'), 'yyyy/MM/dd') #"
+                },
+                {
+                    command: ["edit", "destroy"]
+                }
+            ]
         });
-    });
-    
+    }
+
+    //var dataSource = new kendo.data.DataSource({
+    //    transport: {
+    //        read: {
+    //            url: "Order/GetAllOrder",
+    //            dataType: "json"
+    //        },
+    //        destroy: {
+    //            url: "Order/DeleteOrder"
+    //        },
+    //        parameterMap: function (data, type) {
+
+    //        }
+    //    },
+    //    pageSize: 10,
+    //    schema: {
+    //        model: {
+    //            id: "OrderID",
+    //            fields: {
+    //                OrderID: {
+    //                    editable: false,
+    //                    // a defaultValue will not be assigned (default value is false)
+    //                    nullable: true
+    //                },
+    //                CustName: {
+    //                    type: "String"
+    //                },
+    //                OrderDate: {
+    //                    //data type of the field {Number|String|Boolean|Date} default is String
+    //                    type: "date"
+    //                },
+    //                ShippedDate: {
+    //                    //data type of the field {Number|String|Boolean|Date} default is String
+    //                    type: "date",
+    //                }
+    //            }
+    //        }
+    //    }
+    //});
+
+    //var dataSource = new kendo.data.DataSource({
+    //    transport: {
+    //        read: {
+    //            url: "Order/GetAllOrder",
+    //            //dataType: "json"
+    //        },
+    //        destroy: {
+    //            url: "Order/DeleteOrder"
+    //        },
+    //        parameterMap: function (data, type) {
+
+    //        }
+    //    }
+    //});
+    //$(document).ready(function () {
+
+    //    $("#grid").kendoGrid({
+    //        dataSource: dataSource,
+    //        selectable: true,
+    //        scrollable: false,
+    //        sortable: true,
+    //        resizable: true,
+    //        pageable: {
+    //            refresh: true,
+    //            pageSizes: true,
+    //            buttonCount: 10
+    //        },
+    //        columns: [
+    //    {
+    //        field: "OrderId",
+    //        title: "OrderId"
+    //    },
+    //    {
+    //        field: "CustName",
+    //        title: "CustName",
+
+    //    },
+    //    {
+    //        field: "Orderdate",
+    //        title: "Orderdate",
+    //        template: "#= kendo.toString(kendo.parseDate(Orderdate, 'yyyy-MM-dd'), 'yyyy/MM/dd') #"
+
+    //    },
+    //    {
+    //        field: "ShippedDate",
+    //        title: "ShippedDate",
+    //        template: "#= kendo.toString(kendo.parseDate(Orderdate, 'yyyy-MM-dd'), 'yyyy/MM/dd') #"
+    //    },
+    //    {
+    //        command: "destroy"
+    //    }]
+    //    });
+    //    //dataSource.fetch(function () {
+    //    //    var dataItem = dataSource.at(1);
+    //    //    dataSource.remove(dataItem);
+    //    //    var data = dataSource.data();
+    //    //    console.log(data.length);
+    //    //    console.log(data[0].OrderId);
+    //    //});
+    //});
+
 </script>

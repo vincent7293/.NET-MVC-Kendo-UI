@@ -101,7 +101,7 @@ namespace WebApplication1.Controllers
             return RedirectToAction("Index");
         }
 
-        [HttpGet()]
+        [HttpDelete()]
         public ActionResult DeleteOrder(int id)
         {
             Models.OrderService orderservice = new Models.OrderService();
