@@ -114,8 +114,9 @@ DELETE FROM [Sales].[Orders]
             }
         }
 
-        public void UpdateOrder(Models.Order order)
+        public int UpdateOrder(Models.Order order)
         {
+            int effectData = 0;
             string sql = @"UPDATE [Sales].[Orders]
    SET [CustomerID] = @custid
       ,[EmployeeID] = @empid
@@ -155,9 +156,10 @@ DELETE FROM [Sales].[Orders]
                 cmd.Parameters.Add(new SqlParameter("@shippostalcode", order.ShipPostalCode == null ? string.Empty : order.ShipPostalCode));
                 cmd.Parameters.Add(new SqlParameter("@shipcountry", order.ShipCountry == null ? string.Empty : order.ShipCountry));
 
-                cmd.ExecuteNonQuery();
+                effectData = cmd.ExecuteNonQuery();
                 conn.Close();
             }
+            return effectData;
         }
 
         public void UpdateOrderDetail(Models.OrderDetail orderdetail)
@@ -228,7 +230,7 @@ AND  (O.RequiredDate = @RequiredDate OR @RequiredDate = '')
         
         }
 
-        public List<Models.Order> GetOrderById(String id)
+        public List<Models.Order> GetOrderById(int id)
         {
             DataTable dt = new DataTable();
             string sql = @"SELECT  O.OrderID, O.CustomerID as CustId, C.CompanyName as CustName, E.EmployeeID as EmpId
@@ -285,7 +287,7 @@ ORDER BY O.OrderID DESC";
             return this.MapOrderDataToList(dt);//.FirstOrDefault();
         }
 
-        public List<Models.OrderDetail> GetOrderDetailById(String orderid)
+        public List<Models.OrderDetail> GetOrderDetailById(int orderid)
         {
             DataTable dt = new DataTable();
             string sql = @"SELECT  OrderId, P.ProductId, ProductName, convert(float, OD.UnitPrice, 1) as UnitPrice, Qty

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -11,16 +12,16 @@ namespace WebApplication1.Controllers
     public class OrderController : Controller
     {
         // GET: Order
+        //public JsonResult Index()
+        //{
+        //    Models.CodeService customerservice = new Models.CodeService();
+        //     String empData = JsonConvert.SerializeObject(LoadSelectListItem("Emp", 0));
+        //    String shipperData = JsonConvert.SerializeObject(LoadSelectListItem("Shipper", 0));
+        //    var result = new { empData = empData, shipperData = shipperData };
+        //    return Json(result);
+        //}
         public ActionResult Index()
         {
-            
-            Models.CodeService customerservice = new Models.CodeService();
-            List<SelectListItem> empData = new List<SelectListItem>();
-            List<SelectListItem> shipperData = new List<SelectListItem>();
-            empData = LoadSelectListItem("Emp", 0);
-            shipperData = LoadSelectListItem("Shipper", 0);
-            ViewBag.EmpId = empData;
-            ViewBag.ShipperId = shipperData;
             return View();
         }
         [HttpGet]
@@ -101,12 +102,13 @@ namespace WebApplication1.Controllers
             return RedirectToAction("Index");
         }
 
-        [HttpDelete()]
-        public ActionResult DeleteOrder(int id)
+        [HttpPost()]
+        public JsonResult DeleteOrder(String jsonobj)
         {
+            Models.Order order = JsonConvert.DeserializeObject< Models.Order>(jsonobj);
             Models.OrderService orderservice = new Models.OrderService();
-            ViewBag.effectData = orderservice.DeleteOrder(id.ToString());
-            return RedirectToAction("Index");
+            int effectData = orderservice.DeleteOrder(order.OrderId.ToString());
+            return Json(effectData);
         }
 
         [HttpPost()]
@@ -118,7 +120,7 @@ namespace WebApplication1.Controllers
         }
 
         [HttpGet]
-        public ActionResult UpdateOrder(String id)
+        public ActionResult UpdateOrder(int id)
         {
             Models.CodeService customerservice = new Models.CodeService();
             Models.OrderService orderservice = new Models.OrderService();
@@ -157,9 +159,9 @@ namespace WebApplication1.Controllers
                 });
                 
             }
-            custData = LoadSelectListItem("Cust", defaultCustId);
-            empData = LoadSelectListItem("Emp", defaultEmpId);
-            shipperData = LoadSelectListItem("Shipper", defaultShipperId);
+            custData = JsonConvert.DeserializeObject<List<SelectListItem>>(LoadSelectListItem("Cust", defaultCustId).ToString());
+            empData = JsonConvert.DeserializeObject<List<SelectListItem>>(LoadSelectListItem("Emp", defaultEmpId).ToString());
+            shipperData = JsonConvert.DeserializeObject<List<SelectListItem>>(LoadSelectListItem("Shipper", defaultShipperId).ToString());
             
             ViewBag.CustId = custData;
             ViewBag.EmpId = empData;
@@ -167,12 +169,14 @@ namespace WebApplication1.Controllers
             ViewBag.OrderDetail = orderdetail;
             return View(order);
         }
+
         [HttpPost()]
-        public ActionResult UpdateOrder(Models.Order order)
+        public JsonResult UpdateOrder(String jsonobj)
         {
+            Models.Order order = JsonConvert.DeserializeObject<Models.Order>(jsonobj);
             Models.OrderService orderservice = new Models.OrderService();
-            orderservice.UpdateOrder(order);
-            return RedirectToAction("Index");
+            int effectData = orderservice.UpdateOrder(order);
+            return Json(effectData);
         }
         [HttpPost]
         public String UpdateOrderDetail(List<OrderDetail> odList)
@@ -192,8 +196,10 @@ namespace WebApplication1.Controllers
         /// <param name="listName"></param>
         /// <param name="defaultId"></param>
         /// <returns></returns>
-        public List<SelectListItem> LoadSelectListItem(String listName,int defaultId)
+        [HttpPost]
+        public JsonResult LoadSelectListItem(String listName,int defaultId)
         {
+
             Models.CodeService customerservice = new Models.CodeService();
             List<SelectListItem> resultList = new List<SelectListItem>();
             resultList.Add(new SelectListItem()
@@ -238,7 +244,7 @@ namespace WebApplication1.Controllers
                     }
                     break;
             }
-            return resultList;
+            return Json(resultList);
         }
     }
 }
