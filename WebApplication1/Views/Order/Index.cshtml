@@ -24,20 +24,20 @@
                 <tr>
                     <td>客戶名稱</td>
                     <td>
-                        <input id="Cust" />
+                        <input id="Cust" name="CustId" />
                     </td>
                     <td></td>
                     <td></td>
                 </tr>
                 <tr>
                     <td>負責員工</td>
-                    <td><input id="Emp" /></td>
+                    <td><input id="Emp" name="EmpId"  /></td>
                     <td></td>
                     <td></td>
                 </tr>
                 <tr>
                     <td>出貨公司</td>
-                    <td><input id="Shipper" /></td>
+                    <td><input id="Shipper" name="ShipperId"  /></td>
                     <td></td>
                     <td></td>
                 </tr>
@@ -89,8 +89,6 @@
         $("#Orderdate").kendoDatePicker();
         $("#ShippedDate").kendoDatePicker();
         $("#RequiredDate").kendoDatePicker();
-        $("#EmpId").kendoComboBox();
-        $("#ShipperId").kendoComboBox();
         $("#OrderId").kendoMaskedTextBox({
             mask: "11000"
         });
@@ -112,7 +110,6 @@
                 },
                 parameterMap: function (data, type) {
                     if (type != "read") {
-                        // send the destroyed data items as the "models" service parameter encoded in JSON
                         return { jsonobj: kendo.stringify(data) }
                     }
                 }
@@ -224,7 +221,6 @@
                 }, {
                     field: "ShipPostalCode",
                     title: "ShipPostalCode"
-
                 }, {
                     field: "ShipCountry",
                     title: "ShipCountry"
@@ -240,9 +236,8 @@
         $('#' + type).kendoComboBox({
             placeholder: "Select",
             dataTextField: "Text",
-            dataValueField:  "Value",
+            dataValueField: "Value",
             dataSource: {
-                type: "json",
                 transport: {
                     read: {
                         url: "LoadSelectListItem",
