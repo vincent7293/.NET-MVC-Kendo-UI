@@ -37,11 +37,12 @@ namespace WebApplication1.Controllers
             return View();
         }
         [HttpPost()]
-        public ActionResult SearchOrder(Models.Order searchCondition)
+        public JsonResult SearchOrder(String jsonobj)
         {
+            Models.Order searchCondition = JsonConvert.DeserializeObject<Models.Order>(jsonobj, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
             Models.OrderService orderservice = new Models.OrderService();
             List<Order> order = orderservice.GetOrderByCondition(searchCondition);
-            return View(order);
+            return Json(order);
         }
 
         public ActionResult InsertOrder()

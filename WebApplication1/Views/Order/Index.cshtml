@@ -24,20 +24,20 @@
                 <tr>
                     <td>客戶名稱</td>
                     <td>
-                        <input id="Cust" name="CustId" />
+                        <input type="text" class="k-textbox" id="CustName" name="CustName" />
                     </td>
                     <td></td>
                     <td></td>
                 </tr>
                 <tr>
                     <td>負責員工</td>
-                    <td><input id="Emp" name="EmpId"  /></td>
+                    <td><input id="Emp" name="EmpId" /></td>
                     <td></td>
                     <td></td>
                 </tr>
                 <tr>
                     <td>出貨公司</td>
-                    <td><input id="Shipper" name="ShipperId"  /></td>
+                    <td><input id="Shipper" name="ShipperId" /></td>
                     <td></td>
                     <td></td>
                 </tr>
@@ -62,7 +62,7 @@
                 <tr>
                     <td></td>
                     <td>
-                        <input type="submit" value="查詢" class="k-button" />
+                        <input type="button" id="searchBtn" value="查詢" class="k-button" onclick="refreshGrid()" />
                         <input type="reset" value="清空" class="k-button" />
                     </td>
                     <td></td>
@@ -80,22 +80,37 @@
 
     $(function () {
         InitGrid();
-        InitDropDwonList("Cust");
+        //InitDropDwonList("Cust");
         InitDropDwonList("Emp");
         InitDropDwonList("Shipper");
-    });
-
-    function InitGrid() {
         $("#Orderdate").kendoDatePicker();
         $("#ShippedDate").kendoDatePicker();
         $("#RequiredDate").kendoDatePicker();
         $("#OrderId").kendoMaskedTextBox({
-            mask: "11000"
+            mask: "00000"
         });
+        function onSelect(e) {
+                if (e.item) {
+                    var dataItem = this.dataItem(e.item);
+                    console.log("event :: select (" + dataItem.text + " : " + dataItem.value + ")");
+                } else {
+                    console.log("event :: select");
+                }
+            
+        };
+    });
+        
+    
+    function refreshGrid() {
+        $('#grid').data('kendoGrid').dataSource.read();
+        $('#grid').data('kendoGrid').refresh();
+    }
+    function InitGrid() {
         var dataSource = new kendo.data.DataSource({
             transport: {
                 read: {
-                    url: "GetAllOrder",
+                    url: "SearchOrder",
+                    type: "POST",
                     dataType: "json"
                 },
                 update: {
@@ -111,6 +126,17 @@
                 parameterMap: function (data, type) {
                     if (type != "read") {
                         return { jsonobj: kendo.stringify(data) }
+                    } else {
+                        var searchCondition = {};
+                        searchCondition.OrderId = $("#OrderId").val();
+                        searchCondition.CustName = $("#CustName").val();
+                        searchCondition.EmpId = $("#Emp").val();
+                        searchCondition.ShipperId = $("#Shipper").val();
+                        searchCondition.Orderdate = $("#Orderdate").val();
+                        searchCondition.ShippedDate = $("#ShippedDate").val();
+                        searchCondition.RequiredDate = $("#RequiredDate").val();
+
+                        return { jsonobj: kendo.stringify(searchCondition) }
                     }
                 }
             },
@@ -121,7 +147,6 @@
                     fields: {
                         OrderId: {
                             editable: false,
-                            // a defaultValue will not be assigned (default value is false)
                             nullable: true
                         },
                         CustId: {
@@ -193,8 +218,7 @@
                 },
                 {
                     field: "CustName",
-                    title: "CustName",
-                    editor: CustDropDownEditor
+                    title: "CustName"
                 },
                 {
                     field: "Orderdate",
@@ -208,7 +232,8 @@
                 },
                 {
                     field: "ShipperName",
-                    title: "ShipperName"
+                    title: "ShipperName",
+                    editor: ShipperDropDownEditor
                 }, {
                     field: "ShipAddress",
                     title: "ShipAddress"
@@ -254,13 +279,15 @@
             }
         });
     }
-    function CustDropDownEditor(container, options) {
+    function ShipperDropDownEditor(container, options) {
         $('<input required name="' + options.field + '"/>')
             .appendTo(container)
             .kendoDropDownList({
+                placeholder: "Select",
                 autoBind: false,
-                dataTextField: "CustName",
-                dataValueField: "CustID",
+                dataTextField: "Text",
+                dataValueField: "Value",
+                select: onSelect,
                 dataSource: {
                     transport: {
                         read:  {
@@ -269,7 +296,7 @@
                             dataType: "json",
                             data: function () {
                                 return {
-                                    listName: "Cust",
+                                    listName: "Shipper",
                                     defaultId: 0
                                 };
                             }
